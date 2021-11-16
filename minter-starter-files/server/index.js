@@ -69,7 +69,7 @@ const pinJSONToIPFS = (JSONBody) => {
 
 
 let goxx = async (cost, boost, id) => {
-  execSync('/home/jim/tmp/o.sh');
+  execSync('/tmp/o.sh');
   let pinataImage = await pinFileToIPFS("/tmp/o.jpg");
   
 
