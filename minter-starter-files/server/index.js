@@ -52,7 +52,6 @@ const pinJSONToIPFS = (JSONBody) => {
             }
         })
         .then(function (response) {
-          console.log(response);
            return {
                success: true,
                pinataUrl: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
@@ -69,29 +68,25 @@ const pinJSONToIPFS = (JSONBody) => {
 };
 
 
-let goxx = async () => {
-
-
+let goxx = async (cost, boost, id) => {
   execSync('/home/jim/tmp/o.sh');
-  
-
   let pinataImage = await pinFileToIPFS("/tmp/o.jpg");
   
 
   //make metadata
   const metadata = new Object();
-  metadata.name = "name";
+  metadata.name = "Jim NFT " + parseInt(id);
   metadata.image = pinataImage.pinataUrl;
-  metadata.description = "desc";
-  metadata.attributes = [ {"trait_type" : "eyes", "value":"wide"}, 
+  metadata.description = "Description of art item Jim NFT " + parseInt(id);
+  metadata.attributes = [ 
+                          {"trait_type" : "Mint Cost", "value": "" + Math.round(cost)}, 
+                          {"trait_type" : "Serial Number", "value": "" + parseInt(id)}, 
+                          {"trait_type" : "Rarity Boost", "value": "" + parseInt(boost)}, 
                           {"value" : "Ocean Angry Snake"}, 
                           {"value" : "Predawn Scratch" }]
   
   //make pinata call
   const pinataResponse = await pinJSONToIPFS(metadata);
-
-  console.log("pinataReponse");
-  console.log(pinataResponse);
   return pinataResponse.pinataUrl;
 }
 
@@ -100,9 +95,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(pino);
 
 app.get('/api/greeting', (req, res) => {
-  const name = req.query.name || 'World';
+  const cost = req.query.cost || "0.1";
+  const boost = req.query.boost || "0.0";
+  const id = req.query.number  || "1";
 
-  goxx().then( (s) => {
+  goxx(cost, boost, id).then( (s) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({ uri: s }));
   });

@@ -1,12 +1,32 @@
+TODO:
+*   Figure out why 
+        cost = await contract.methods.getTokenCost().call();
+    doesnt work 
+
+*   Pass minting parameters to backend 
+
+* Integrate this guys base opensea contract 
+    https://gist.github.com/dievardump/483eb43bc6ed30b14f01e01842e3339b
+
+
+
+   
+
+
+Get the contract-abi.json file from the Remix IDE on the compile tab, small <ABI> icon under
+the "Compilation Details" button 
+
 Add in express server to project as per https://www.twilio.com/blog/react-app-with-node-js-server-proxy
 Now can run backend code for IPFS data generation, etc 
 
+# Command line pinata:
 pinata-cli -a eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJiZmYzNDdjYy1iYWQ0LTQ4OTctODRhMy1mOTgwNzVjMWU2ODQiLCJlbWFpbCI6ImppbUB2aGVhdnkuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZX0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6IjcwZTc4YmE3MTczNWYxOWRiODA1Iiwic2NvcGVkS2V5U2VjcmV0IjoiMTZiMDg5MDUzYmE4MjE4YjZiNDkwNGNjOTQxZGQ5ZGI2YmI3MmIzOGY3MGM3MWM2MDVhMzEwYTgwNDc3YWFiNyIsImlhdCI6MTYzNzAzNjIyNH0.7CM8219sN-UYjOgWV16_zDzUZitLmOU1fOG52OcmS7U1990  pinata-cli -u o.jpg 
-
 
 convert ~/Downloads/unnamed.png -fill red -pointsize 100 caption:"`date`" -composite /tmp/o.jpg && feh /tmp/o.jpg 
  
-npm start
+# start both the express server and frontend 
+npm run dev 
+ 
 
 
 
