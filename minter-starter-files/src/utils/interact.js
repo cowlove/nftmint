@@ -1,16 +1,13 @@
-import {pinJSONToIPFS} from './pinata.js'
-
-
 require('dotenv').config();
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(alchemyKey); 
 
+//const contractABI = require('../contract-abi.json')
+//const contractAddress = "0x4C4a07F737Bf57F6632B6CAB089B78f62385aCaE";
 
-const contractABI = require('../contract-abi.json')
-const contractAddress = "0x4C4a07F737Bf57F6632B6CAB089B78f62385aCaE";
-
-
+const contractABI = require('../c2-abi.json')
+const contractAddress = "0x91ad278dbE6dAd8aC6B0D8f4F178Cb01e06861c9";
 
 export const connectWallet = async () => {
   if (window.ethereum) {
@@ -92,31 +89,11 @@ export const getCurrentWalletConnected = async () => {
 };
 
 
-
 export const mintNFT = async(url, name, description) => {
-  //error handling
-  if (url.trim() == "" || (name.trim() == "" || description.trim() == "")) { 
-    return {
-     success: false,
-     status: "❗Please make sure all fields are completed before minting.",
-    }
-   }
- 
-  //make metadata
-  const metadata = new Object();
-  metadata.name = name;
-  metadata.image = url;
-  metadata.description = description;
-  
-  //make pinata call
-  const pinataResponse = await pinJSONToIPFS(metadata);
-  if (!pinataResponse.success) {
-      return {
-          success: false,
-          status: "😢 Something went wrong while uploading your tokenURI.",
-      }
-  } 
-  const tokenURI = pinataResponse.pinataUrl;  
+  // make image
+  let r = await fetch(`/api/greeting?name=foo`);
+  let j = await r.json();
+  const tokenURI = j.uri;  
 
   window.contract = await new web3.eth.Contract(contractABI, contractAddress);
 
@@ -124,7 +101,7 @@ export const mintNFT = async(url, name, description) => {
  const transactionParameters = {
   to: contractAddress, // Required except during contract publications.
   from: window.ethereum.selectedAddress, // must match user's active address.
-  'data': window.contract.methods.mintNFT(window.ethereum.selectedAddress, tokenURI).encodeABI()//make call to NFT smart contract 
+  'data': window.contract.methods.mintTo(window.ethereum.selectedAddress, tokenURI).encodeABI()//make call to NFT smart contract 
 };
 
   //sign the transaction via Metamask
