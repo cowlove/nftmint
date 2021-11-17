@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import { connectWallet, mintNFT, getCurrentWalletConnected } from "./utils/interact.js";
-import ReactSlider from "react-slider";
-import {RangeStepInput} from 'react-range-step-input';
-
-//import detectEthereumProvider from '@metamask/detect-provider';
 
 require('dotenv').config();
-
-
-
 
 const contractABI = require('./c2-abi.json')
 const contractAddress = "0x6EdB1622dFd2c1fBa4484A1f2F5cD6E071d908Db"
@@ -30,13 +23,15 @@ const Minter = (props) => {
     const { address, status } = await getCurrentWalletConnected();
     setWallet(address)
     setStatus(status);
-
-    baseCost = await getCurrentCost();
-    setCost(baseCost);
+    updateBaseCost();
     addWalletListener();
 
   }, []);
 
+  const updateBaseCost = async () => {
+      baseCost = await getCurrentCost();
+      setCost(baseCost);
+  }
 
   const getCurrentCost = async () => {
     const Web3 = require('web3');
@@ -45,8 +40,7 @@ const Minter = (props) => {
     let contract = await new web3.eth.Contract(contractABI, contractAddress);
     contract.setProvider(web3.currentProvider);
 
-    const cost = await contract.methods.getTokenCost().call();
-    return cost;
+    return contract.methods.getTokenCost().call();
   }
   
   const getCurrentTokenID = async () => {
@@ -56,35 +50,38 @@ const Minter = (props) => {
     let contract = await new web3.eth.Contract(contractABI, contractAddress);
     contract.setProvider(web3.currentProvider);
 
-    const cost = await contract.methods.currentTokenId().call();
-    return cost;
+    return contract.methods.currentTokenId().call();
   }
 
-  const onRarityBoostChange = async (v) => {
-      setCost(baseCost * (1.0 + v/25));
+  const onSliderChange = async (v) => {
       setSlider(v);
+      setCost(baseCost * (1.0 + slider/25));
       setStatus("Ready to mint your NFT!");
   }
 
   const mintNFT = async () => {
-    setStatus("Minting your NFT!");
     
     //const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
     //const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
     //const web3 = createAlchemyWeb3(alchemyKey);
 
+    setStatus("Connecting to the NFT smart contract...");
     const Web3 = require('web3');
     const web3 = new Web3(Web3.givenProvider);
 
     let contract = await new web3.eth.Contract(contractABI, contractAddress);
     contract.setProvider(web3.currentProvider);
 
+    setStatus("Reserving an NFT token spot for you...");
     const id = await getCurrentTokenID();
+    await updateBaseCost();
 
+    setStatus("Generating the art...");
     let r = await fetch("/api/greeting?cost=" + cost + "&boost=" + slider + "&number=" + (parseInt(id) + 1));
     let j = await r.json();
     const tokenURI = j.uri;
 
+    setStatus("Publishing the art on the blockchain...");
     //set up your Ethereum transaction
     const transactionParameters = {
       to: contractAddress, // Required except during contract publications.
@@ -103,7 +100,7 @@ const Minter = (props) => {
         });
       return {
         success: true,
-        status: "✅ Check out your transaction on Etherscan: https://ropsten.etherscan.io/tx/" + txHash + " cost was " + cost
+        status: "✅ Check out your transaction! https://ropsten.etherscan.io/tx/" + txHash
       }
     } catch (error) {
       return {
@@ -169,7 +166,7 @@ const Minter = (props) => {
 
       <p>
       </p>RARITY BOOST: <input type="range" min="0" max="100" value={slider}
-        onChange={e => onRarityBoostChange(e.target.value)}
+        onChange={e => onSliderChange(e.target.value)}
      />
       <button id="mintButton" onClick={onMintPressed}>
         Mint NFT

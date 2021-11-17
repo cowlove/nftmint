@@ -13,9 +13,10 @@ contract BeenNice is ERC721URIStorage {
 
     address proxyRegistryAddress;
     address owner;
-    uint256 private currentTokenId;
+    uint256 public currentTokenId;
     mapping (uint256 => string) customURI;
-
+    string private curi = "https://gateway.pinata.cloud/ipfs/Qmbf22Jbm9w6U5M5WzKCMQNQ9BB7Z7FHxxUjc1wwzsNgN8";
+    
     uint256 f1;
     uint256 f2;
     uint256 f3;
@@ -28,15 +29,15 @@ contract BeenNice is ERC721URIStorage {
         f1 = a; f2 = b; f3 = c;
     }
 
-    function getTokenCost() public view returns (uint256) { 
+    function getTokenCost() public view returns (uint256) {
         return currentTokenId * f2 / f3 + f1;
     }
     
-    function contractURI() public pure returns (string memory) {
-        return "https://gateway.pinata.cloud/ipfs/Qmbf22Jbm9w6U5M5WzKCMQNQ9BB7Z7FHxxUjc1wwzsNgN8";
+    function contractURI() public view returns (string memory) {
+        return curi;
     }
 
-    constructor() ERC721("Juicy Fruit Collection IV", "JFC") {
+    constructor() ERC721("Juicy Fruit Collection Six", "JFC") {
         owner = msg.sender;
         setCostFunc(1000, 1, 10);
     }
