@@ -32,7 +32,7 @@ const Minter = (props) => {
         baseCost = await getCurrentCost();
         setCost(baseCost * (1.0 + slider/25));
       } catch(error) { 
-        0;
+        setCost(1.0);
       }
   }
 
@@ -67,7 +67,13 @@ const Minter = (props) => {
 
   const mintNFT = async () => {
     setPreviewImage("");
-    
+    if (walletAddress.length <= 0) { 
+      return {
+        success: false,
+        status : "🦊 Connect to Metamask using the top right button."
+      }
+    } 
+
     //const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
     //const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
     //const web3 = createAlchemyWeb3(alchemyKey);
