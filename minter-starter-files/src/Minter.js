@@ -56,6 +56,7 @@ const Minter = (props) => {
       setSlider(v);
       setCost(baseCost * (1.0 + slider/25));
       setStatus("Ready to mint your NFT!");
+      setPreviewImage("");
   }
 
   const mintNFT = async () => {
