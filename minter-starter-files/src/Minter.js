@@ -73,8 +73,17 @@ const Minter = (props) => {
     contract.setProvider(web3.currentProvider);
 
     setStatus("Reserving an NFT token spot for you...");
-    const id = await getCurrentTokenID();
-    await updateBaseCost();
+    let id = 0;
+    try { 
+        id = await getCurrentTokenID();
+        await updateBaseCost();
+    } catch (error) {
+        return {
+          success: false,
+          status: "😥 Something went wrong! (Please make sure youre on a rinkeby test chain.) Error: " + error.message
+      }
+  
+    }
 
     setStatus("Generating the art...");
     let r = await fetch("/api/greeting?cost=" + cost + "&boost=" + slider + "&number=" + (parseInt(id) + 1));
