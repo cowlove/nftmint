@@ -29,7 +29,7 @@ const Minter = (props) => {
 
   const updateBaseCost = async () => {
       baseCost = await getCurrentCost();
-      //setCost(baseCost);
+      setCost(baseCost * (1.0 + slider/25));
   }
 
   const getCurrentCost = async () => {
