@@ -100,7 +100,7 @@ const Minter = (props) => {
         });
       return {
         success: true,
-        status: "✅ Check out your transaction! https://ropsten.etherscan.io/tx/" + txHash
+        status: "✅ Check out your transaction! https://rinkeby.etherscan.io/tx/" + txHash
       }
     } catch (error) {
       return {
