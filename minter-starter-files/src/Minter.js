@@ -55,7 +55,9 @@ const Minter = (props) => {
   const onSliderChange = async (v) => {
       setSlider(v);
       setCost(baseCost * (1.0 + slider/25));
-      setStatus("Ready to mint your NFT!");
+      if (walletAddress.length > 0) {
+         setStatus("Ready to mint your NFT!");
+      }
       setPreviewImage("");
   }
 
