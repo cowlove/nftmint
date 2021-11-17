@@ -12,9 +12,7 @@ const Minter = (props) => {
   //State variables
   const [walletAddress, setWallet] = useState("");
   const [status, setStatus] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [url, setURL] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
   const [cost, setCost] = useState("");
   const [slider, setSlider] = useState("");
 
@@ -23,6 +21,7 @@ const Minter = (props) => {
     const { address, status } = await getCurrentWalletConnected();
     setWallet(address)
     setStatus(status);
+    setPreviewImage("");
     updateBaseCost();
     addWalletListener();
 
@@ -60,6 +59,7 @@ const Minter = (props) => {
   }
 
   const mintNFT = async () => {
+    setPreviewImage("");
     
     //const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
     //const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
@@ -79,15 +79,18 @@ const Minter = (props) => {
     setStatus("Generating the art...");
     let r = await fetch("/api/greeting?cost=" + cost + "&boost=" + slider + "&number=" + (parseInt(id) + 1));
     let j = await r.json();
-    const tokenURI = j.uri;
+    const tokenURL = j.token;
+    const imageURL = j.image;
 
-    setStatus("Publishing the art on the blockchain...");
+    //setPreviewImage(imageURL);
+
+    setStatus("Minting to the blockchain, please approve the wallet transaction!");
     //set up your Ethereum transaction
     const transactionParameters = {
       to: contractAddress, // Required except during contract publications.
       from: window.ethereum.selectedAddress, // must match user's active address.
       "value": "" + Math.round(cost),
-      'data': contract.methods.mintTo(window.ethereum.selectedAddress, tokenURI)
+      'data': contract.methods.mintTo(window.ethereum.selectedAddress, tokenURL)
         .encodeABI()//make call to NFT smart contract 
     };
 
@@ -98,9 +101,10 @@ const Minter = (props) => {
           method: 'eth_sendTransaction',
           params: [transactionParameters],
         });
-      return {
-        success: true,
-        status: "✅ Check out your transaction! https://rinkeby.etherscan.io/tx/" + txHash
+        setPreviewImage(imageURL);
+        return {
+          success: true,
+          status: "✅ Congratulations, here is your blockhain transaction!\nhttps://rinkeby.etherscan.io/tx/" + txHash
       }
     } catch (error) {
       return {
@@ -171,6 +175,8 @@ const Minter = (props) => {
       <button id="mintButton" onClick={onMintPressed}>
         Mint NFT
       </button>
+      {previewImage != ""  && (<center><img src={previewImage} 
+        style={{borderWidth:200,borderColor:'#000000',width:200,height:200,borderRadius:100}}></img></center>) }
       <p id="status">
         {status}
       </p>

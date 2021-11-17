@@ -87,7 +87,7 @@ let goxx = async (cost, boost, id) => {
   
   //make pinata call
   const pinataResponse = await pinJSONToIPFS(metadata);
-  return pinataResponse.pinataUrl;
+  return { token: pinataResponse.pinataUrl, image: pinataImage.pinataUrl};
 }
 
 const app = express();
@@ -99,9 +99,9 @@ app.get('/api/greeting', (req, res) => {
   const boost = req.query.boost || "0.0";
   const id = req.query.number  || "1";
 
-  goxx(cost, boost, id).then( (s) => {
+  goxx(cost, boost, id).then( (m) => {
     res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ uri: s }));
+    res.send(JSON.stringify({ "token" : m.token, "image": m.image  }));
   });
 });
 app.listen(3001, () =>
