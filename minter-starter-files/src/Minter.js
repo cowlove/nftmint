@@ -189,6 +189,7 @@ const Minter = (props) => {
       <p id="status">
         {status}
       </p>
+      <br></br><br></br><br></br><p><small><a href="https://testnets.opensea.io/collection/juicy-fruit-collection-six">View collection on OpenSea.</a></small></p>
     </div>
   );
 };
