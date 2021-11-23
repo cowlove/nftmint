@@ -1,0 +1,8 @@
+# Trying to make localhost keys 
+################3
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl.key -out ssl.crt -config open_ssl.conf
+
+
+#Generate CSR and upload it to noip.com, waiting for verification 
+###########
+openssl req -new -nodes -keyout vheavy.key -out vheavy.csr --config open_ssl.conf
