@@ -1,0 +1,3 @@
+Trying to add command-line deployment per 
+https://medium.com/coinmonks/writing-compiling-deploying-solidity-2021-b9b915e8dd5f
+
