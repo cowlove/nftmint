@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
+//const alchemyKey "https://eth-ropsten.alchemyapi.io/v2/CL3XHxPjxWe70-x_k8N2BEsxjYbp2r-W"
 //const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 //const web3 = createAlchemyWeb3(alchemyKey); 
 
@@ -29,7 +29,7 @@ export const connectWallet = async () => {
           <p>
             {" "}
             🦊{" "}
-            <a target="_blank" href={`https://metamask.io/download.html`}>
+            <a target="_blank" rel="noreferrer" href={`https://metamask.io/download.html`}>
               You must install Metamask, a virtual Ethereum wallet, in your
               browser.
             </a>
@@ -72,7 +72,7 @@ export const getCurrentWalletConnected = async () => {
           <p>
             {" "}
             🦊{" "}
-            <a target="_blank" href={`https://metamask.io/download.html`}>
+            <a target="_blank" rel="noreferrer" href={`https://metamask.io/download.html`}>
               You must install Metamask, a virtual Ethereum wallet, in your
               browser.
             </a>

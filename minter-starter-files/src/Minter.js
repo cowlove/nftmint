@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { connectWallet, mintNFT, getCurrentWalletConnected } from "./utils/interact.js";
+import { useEffect, useState, useCallback } from "react";
+import { connectWallet, getCurrentWalletConnected } from "./utils/interact.js";
 
 require('dotenv').config();
 
@@ -8,41 +8,43 @@ const contractAddress = "0x6EdB1622dFd2c1fBa4484A1f2F5cD6E071d908Db"
 let baseCost = 0;
 
 const Minter = (props) => {
-
   //State variables
   const [walletAddress, setWallet] = useState("");
   const [status, setStatus] = useState("");
   const [previewImage, setPreviewImage] = useState("");
   const [cost, setCost] = useState("");
-  const [slider, setSlider] = useState("");
+  const [slider, setSlider] = useState(0.0);
 
-  useEffect(async () => {
-    setSlider(0);
-    const { address, status } = await getCurrentWalletConnected();
-    setWallet(address)
-    setStatus(status);
+  const updateBaseCost = useCallback(async () => {
+    try { 
+      baseCost = await getCurrentCost();
+      let c = baseCost * (1.0 + slider / 25.0);
+      if (isNaN(c)) {
+        c = 4.0;
+      }
+      setCost(c);
+    } catch(error) { 
+      setCost(3.0);
+    }
+  }, [slider]);
+
+  useEffect(() => {
+    async function checkWallet() { 
+      const { address, status } = await getCurrentWalletConnected();
+      setWallet(address);
+      setStatus(status);
+    }
+    checkWallet();
     setPreviewImage("");
     updateBaseCost();
     addWalletListener();
-
-  }, []);
-
-  const updateBaseCost = async () => {
-      try { 
-        baseCost = await getCurrentCost();
-        setCost(baseCost * (1.0 + slider/25));
-      } catch(error) { 
-        setCost(1.0);
-      }
-  }
+  }, [updateBaseCost]);
 
   const getCurrentCost = async () => {
-    const Web3 = require('web3');
+    const  Web3 = require('web3');
     const web3 = new Web3(Web3.givenProvider);
-
     let contract = await new web3.eth.Contract(contractABI, contractAddress);
     contract.setProvider(web3.currentProvider);
-
     return contract.methods.getTokenCost().call();
   }
   
@@ -158,7 +160,7 @@ const Minter = (props) => {
         <p>
           {" "}
           🦊{" "}
-          <a target="_blank" href={`https://metamask.io/download.html`}>
+          <a target="_blank" rel="noreferrer" href={`https://metamask.io/download.html`}>
             You must install Metamask, a virtual Ethereum wallet, in your
             browser.
           </a>
@@ -166,7 +168,6 @@ const Minter = (props) => {
       );
     }
   }
-
 
   const onMintPressed = async () => {
     const { status } = await mintNFT();
@@ -197,7 +198,7 @@ const Minter = (props) => {
       <button id="mintButton" onClick={onMintPressed}>
         Mint NFT
       </button>
-      {previewImage != ""  && (<center><img src={previewImage} 
+      {previewImage !== ""  && (<center><img src={previewImage} alt=""
         style={{borderWidth:200,borderColor:'#000000',width:200,height:200,borderRadius:100}}></img></center>) }
       <p id="status">
         {status}
@@ -206,6 +207,5 @@ const Minter = (props) => {
     </div>
   );
 };
-
 
 export default Minter;

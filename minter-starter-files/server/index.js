@@ -2,9 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const pino = require('express-pino-logger')();
 
-require('dotenv').config();
-const key = process.env.REACT_APP_PINATA_KEY;
-const secret = process.env.REACT_APP_PINATA_SECRET;
+// pinata key/secret 
+require('dotenv').config()
+const key = "3db284cfe47bc413c0ea";
+const secret = "8a661d655157210652c417e2072c7e0d596c3e5b9d91f25372370eb77b7d4755";
 
 //imports needed for this function
 const axios = require('axios');
